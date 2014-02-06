@@ -67,7 +67,7 @@ class Person(object):
       res.append(person)
     return res
 
-
+from django.utils import simplejson
 
 def randomize(players, max_teams, nations):
   players = [Person(**a) for a in players]
@@ -77,5 +77,52 @@ def randomize(players, max_teams, nations):
       p.setNation(nations = nations)
   if max_teams:
     players = Person.setTeam(players, range(1, max_teams + 1))
-  print players
   return players
+
+from settings import TEMP_STORE_FILE
+from threading import Semaphore
+from os import path
+
+file_store_semaphore = Semaphore()
+
+def __lock_temp_store():
+  was_free = file_store_semaphore.acquire(False)
+  if not was_free: print "lock was not free!"
+  return was_free
+def __unlock_temp_store():
+  file_store_semaphore.release()
+
+def syncronized(defaultReturn = None):
+  def inner(func):
+    def wrapper(*args, **kw):
+      if not __lock_temp_store(): return defaultReturn
+      res = defaultReturn
+      try: res = func(*args, **kw)
+      except Exception, e:
+        print e
+        __unlock_temp_store()
+        raise e
+      __unlock_temp_store()
+      return res
+    return wrapper
+  return inner
+
+@syncronized
+def clear_temp():
+  open(TEMP_STORE_FILE, "w").close()
+
+
+@syncronized
+def saveConstelation(players):
+  f = open(TEMP_STORE_FILE, "w")
+  f.write(simplejson.dumps(players, default=lambda o: o.__dict__))
+  f.close()
+
+
+@syncronized("[]")
+def loadConstelation():
+  if not path.isfile(TEMP_STORE_FILE): return "[]"
+  f = open(TEMP_STORE_FILE)
+  cont = f.read()
+  f.close()
+  return cont

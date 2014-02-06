@@ -3,6 +3,12 @@
 
 {%block head%}
 
+<style type="text/css">
+  #players {
+    padding-top: 10px;
+  }
+</style>
+
 {%endblock%}
 
 
@@ -10,18 +16,63 @@
 {% block content %}
   <div class="row">
     <div class="col-xs-12">
-      <a class="btn btn-success pull-right col-xs-1 active" id="on-off-btn" data-toggle="button">
+      <a class="btn btn-success pull-right col-xs-1" id="on-off-btn" data-toggle="button">
         <span class="glyphicon glyphicon-play"> OFF</span>
       </a>
     </div>
   </div>
+
+  <div class="row" id="players">
+    <div class="col-xs-12 well">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Volk</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
 {% endblock content %}
 
 {%block script%}
   <script type="text/javascript">
     var updateIntervalId = -1;
+    var row = "<tr><td>NAME</td><td>TEAM</td><td>NATION</td></tr>";
+    var currentContent = null;
+
+    function update_table (players) {
+      var content = "";
+      if(players){
+        for (var i = 0; i < players.length; i++) {
+          var player = players[i];
+          var playerRow = row.replace("NAME", player["name"]).replace("TEAM", player["team"]).replace("NATION", player["nation"]);
+          content += playerRow;
+        }
+      }
+      var tbody = $("#players tbody").html(content);
+    }
+
     function ajaxResponse(res, status) {
-      console.log(status, res);
+      if(status == "success"){
+        console.log(res.responseText);
+        var players = JSON.parse(res.responseText);
+        update_table(players);
+
+
+        if(currentContent != null && currentContent.toString() == players.toString()){
+          console.log(players);
+          return;
+        }
+        currentContent = players;
+        console.log(currentContent);
+      }
     }
 
     function get_update(){
@@ -43,7 +94,7 @@
 
     $("#on-off-btn").click(function(){
       var btn = $(this);
-      var isOn = btn.hasClass("active");
+      var isOn = !btn.hasClass("active");
       var span = $(btn.find("span")[0]);
       if(isOn){
         span.removeClass("glyphicon-play");

@@ -95,6 +95,13 @@
       $("#js-message").html(message_html.replace("MESSAGE", message))
     }
     var hide_message = function() {$("#js-message").html("");}
+
+    $("table").each(function () {
+      $(this).addClass("table");
+      $(this).addClass("table-striped");
+      $(this).addClass("table-bordered");
+      $(this).addClass("table-hover");
+    })
   </script>
 
   {% block script %}

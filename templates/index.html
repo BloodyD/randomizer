@@ -30,7 +30,7 @@
     <div class="col-xs-8 well">
       <h4>Aufstellung</h4>
       {% if names %}
-        <table class="table table-striped table-bordered table-hover" id="players">
+        <table id="players">
           <thead>
             <tr>
               <th width="30%">Name</th>
@@ -189,14 +189,12 @@
   </script>
 
   <script type="text/javascript">
-    var result = null;
     function ajaxResponse (res, status) {
       //console.log(status, res);
-      if(res.responseText != "OK"){
+      if(status == "success" && res.responseText != "OK"){
         show_message(res.responseText);
         return;
       }
-      result = res;
     }
 
     function  getOption(select) {

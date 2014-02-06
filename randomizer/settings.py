@@ -167,3 +167,9 @@ LOGGING = {
         },
     }
 }
+
+
+TEMP_STORE_FOLDER = path.join(MEDIA_ROOT + "/temp")
+if not path.isdir(TEMP_STORE_FOLDER):
+    os.mkdir(TEMP_STORE_FOLDER)
+TEMP_STORE_FILE = path.join(TEMP_STORE_FOLDER + "/temp_store")

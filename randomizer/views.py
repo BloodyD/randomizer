@@ -9,6 +9,7 @@ from django.utils import simplejson
 from randomizer.forms import MainForm
 from randomizer import *
 
+import traceback
 
 @ensure_csrf_cookie
 @render_to("index.html")
@@ -31,10 +32,8 @@ def update(request):
 @is_ajax
 @require_POST
 def get_update(request):
-  return HttpResponse("OK")
+  return HttpResponse(loadConstelation())
 
-from randomizer import randomize
-import traceback
 
 
 @is_ajax
@@ -48,10 +47,6 @@ def submit(request):
   players = data.get("players", [])
   if not players:
     return HttpResponse("no players found!")
-  try:
-    randomize(players, int(maxteams), nations)
-  except Exception, e:
-    traceback.print_exc(e)
-    raise e
 
+  saveConstelation(randomize(players, int(maxteams), nations))
   return HttpResponse("OK")
