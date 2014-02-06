@@ -4,8 +4,11 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.context_processors import csrf
 from django.views.decorators.http import require_POST
 
+from django.utils import simplejson
+
 from randomizer.forms import MainForm
 from randomizer import *
+
 
 @ensure_csrf_cookie
 @render_to("index.html")
@@ -33,5 +36,7 @@ def get_update(request):
 @is_ajax
 @require_POST
 def submit(request):
-  print request.POST
+  data = simplejson.loads(request.raw_post_data)
+  if not "maxteams" in data or not "nations" in data:
+    return HttpResponse("nothing to randomize!")
   return HttpResponse("OK")

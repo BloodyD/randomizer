@@ -189,8 +189,14 @@
   </script>
 
   <script type="text/javascript">
+    var result = null;
     function ajaxResponse (res, status) {
       console.log(status, res);
+      if(res.responseText != "OK"){
+        show_message(res.responseText);
+        return;
+      }
+      result = res;
     }
 
     function  getOption(select) {
@@ -227,8 +233,14 @@
     }
 
     $("#submit").click(function() {
-      var args = { type:"POST", url:"/ajax/submit/", data:collectData(), complete:ajaxResponse };
-      $.ajax(args);
+      $.ajax({
+        type:"POST",
+        url:"/ajax/submit/",
+        data:JSON.stringify(collectData()),
+        complete:ajaxResponse,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'text',
+      });
     });
   </script>
 {%endblock script%}
