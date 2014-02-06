@@ -1,7 +1,8 @@
-from misc.decorator import render_to
+from misc.decorator import render_to, is_ajax
 from django.http import Http404, HttpResponse
-from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.context_processors import csrf
+from django.views.decorators.http import require_POST
 
 from randomizer.forms import MainForm
 from randomizer import *
@@ -14,7 +15,6 @@ def index(request):
     "names": NAMES[:2],
     "not_in_game": NAMES[2:],
     "nations":NATIONS})
-  print output
   return output
 
 
@@ -25,17 +25,13 @@ def update(request):
   return csrf(request)
 
 
-
-@csrf_protect
+@is_ajax
+@require_POST
 def get_update(request):
-  if request.method != "POST":
-    raise Http404
-  else:
-    return HttpResponse("OK")
+  return HttpResponse("OK")
 
-@csrf_protect
+@is_ajax
+@require_POST
 def submit(request):
-  if request.method != "POST":
-    raise Http404
-  else:
-    return HttpResponse("OK")
+  print request.POST
+  return HttpResponse("OK")
