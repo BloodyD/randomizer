@@ -107,12 +107,12 @@ def syncronized(defaultReturn = None):
     return wrapper
   return inner
 
-@syncronized
+@syncronized()
 def clear_temp():
   open(TEMP_STORE_FILE, "w").close()
 
 
-@syncronized
+@syncronized()
 def saveConstelation(players):
   f = open(TEMP_STORE_FILE, "w")
   f.write(simplejson.dumps(players, default=lambda o: o.__dict__))
@@ -121,7 +121,8 @@ def saveConstelation(players):
 
 @syncronized("[]")
 def loadConstelation():
-  if not path.isfile(TEMP_STORE_FILE): return "[]"
+  if not path.isfile(TEMP_STORE_FILE):
+    return "[]"
   f = open(TEMP_STORE_FILE)
   cont = f.read()
   f.close()

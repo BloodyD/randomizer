@@ -82,7 +82,7 @@
 
 
     function activateUpdate() {
-      updateIntervalId = setInterval(get_update, 2000);
+      updateIntervalId = setInterval(get_update, 5000);
     }
 
     function stopUpdate () {
@@ -108,6 +108,8 @@
         stopUpdate();
       }
     });
+
+    get_update();
 
   </script>
 {%endblock script%}

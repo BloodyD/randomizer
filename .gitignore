@@ -1,3 +1,4 @@
 *.sqlite
 *.pyc
 test.py
+media/temp/*
