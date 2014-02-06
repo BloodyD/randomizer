@@ -7,6 +7,10 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'randomizer.views.index', name='index'),
+    url(r'^update/$', 'randomizer.views.update', name='index'),
+
+    url(r'^ajax/submit/$', 'randomizer.views.submit'),
+    url(r'^ajax/update/$', 'randomizer.views.get_update'),
     # url(r'^randomizer/', include('randomizer.foo.urls')),
 
     (r'^static/(?P<path>.*)$', 'django.contrib.staticfiles.views.serve'),
