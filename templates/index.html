@@ -56,7 +56,7 @@
               <td>
                 <select class="nation_selector">
                   {%for nation in nations%}
-                    <option value="{{forloop.counter}}">{{nation}}</option>
+                    <option value="{{nation}}">{{nation}}</option>
                   {%endfor%}
                 </select>
               </td>
@@ -70,7 +70,7 @@
               <td>
                 <select class="nation_selector">
                   {%for nation in nations%}
-                    <option value="{{forloop.counter0}}">{{nation}}</option>
+                    <option value="{{nation}}">{{nation}}</option>
                   {%endfor%}
                 </select>
               </td>
@@ -159,7 +159,7 @@
 
     function add (name, tbl) {
       var dolly = tbl.find("tbody > tr.dolly");
-      console.log(dolly);
+      //console.log(dolly);
       var newRow = dolly.clone();
       newRow.attr("value", name);
       newRow.removeClass("dolly");
@@ -191,7 +191,7 @@
   <script type="text/javascript">
     var result = null;
     function ajaxResponse (res, status) {
-      console.log(status, res);
+      //console.log(status, res);
       if(res.responseText != "OK"){
         show_message(res.responseText);
         return;
@@ -200,6 +200,10 @@
     }
 
     function  getOption(select) {
+      if(select == null) {
+        show_message("select was null!")
+        return;
+      }
       return $(select.selectedOptions[0]).attr("value");
     }
 
@@ -208,31 +212,27 @@
       var players = [];
       var isTeamRandom = $("#team_random").hasClass("active");
       var isNationRandom = $("#nation_random").hasClass("active");
-      $(".player-row").each(function (idx) {
-        if(!$(this).hasClass("dolly")){
-          var player = {};
-          player["name"] = $(this).attr("value")
+      var playerEls = $(".player-row").filter(function () {return !$(this).hasClass("dolly")});
+      result["players"] = $.map(playerEls, function (el, idx) {
+        var player = {};
+        player["name"] = $(el).attr("value")
+        player["team"] = getOption($(el).find(".team_selector")[0]);
+        player["nation"] = getOption($(el).find(".nation_selector")[0]);
+        return player
+      })
 
-          if(isTeamRandom){player["team"] = "-1"; }else{
-            player["team"] = getOption($(this).find(".team_selector")[0]);
-          }
-          if(isNationRandom){player["nation"] = "-1"}else{
-            player["nation"] = getOption($(this).find(".nation_selector")[0]);
-          }
-          players.push(player);
-        }
-      });
-
-      result["players"] = players;
       if(isTeamRandom){
         result["maxteams"] = getOption($(".max-teams")[0]);
       }
-      console.log(result);
-
+      if(isNationRandom){
+        var natEls = $(".nation-select").filter(function(){ return !$(this).hasClass("active")});
+        result["nations"] = $.map(natEls, function(el){return $(el).attr("value")})
+      }
       return result;
     }
 
     $("#submit").click(function() {
+      hide_message();
       $.ajax({
         type:"POST",
         url:"/ajax/submit/",

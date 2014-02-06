@@ -90,8 +90,11 @@
   <script type="text/javascript">
     var message_html = "<div class=\"col-xs-12 alert alert-danger fade in\"><button class=\"close\" data-dismiss=\"alert\">×</button><span id=\"text\">MESSAGE</span></div>"
     var show_message = function (message) {
+      var split = message.split("\n")
+      message = split[0] + ": " + split[1];
       $("#js-message").html(message_html.replace("MESSAGE", message))
     }
+    var hide_message = function() {$("#js-message").html("");}
   </script>
 
   {% block script %}

@@ -33,10 +33,25 @@ def update(request):
 def get_update(request):
   return HttpResponse("OK")
 
+from randomizer import randomize
+import traceback
+
+
 @is_ajax
 @require_POST
 def submit(request):
   data = simplejson.loads(request.raw_post_data)
-  if not "maxteams" in data or not "nations" in data:
+  if not "maxteams" in data and not "nations" in data:
     return HttpResponse("nothing to randomize!")
+  nations = data.get("nations", [])
+  maxteams = data.get("maxteams", 0)
+  players = data.get("players", [])
+  if not players:
+    return HttpResponse("no players found!")
+  try:
+    randomize(players, int(maxteams), nations)
+  except Exception, e:
+    traceback.print_exc(e)
+    raise e
+
   return HttpResponse("OK")
