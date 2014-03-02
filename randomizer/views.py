@@ -64,7 +64,7 @@ def get_update(request):
 @is_ajax
 @require_POST
 def submit(request):
-  data = simplejson.loads(request.raw_post_data)
+  data = simplejson.loads(request.body)
   if not "maxteams" in data and not "nations" in data:
     return HttpResponse("nothing to randomize!")
   nations = data.get("nations", [])

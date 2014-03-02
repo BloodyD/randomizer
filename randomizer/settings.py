@@ -69,8 +69,8 @@ USE_TZ = True
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 
-MEDIA_URL = 'media'
-STATIC_URL = 'static'
+MEDIA_URL = 'media/'
+STATIC_URL = 'static/'
 STATIC_ROOT = path.join(APP_PATH, STATIC_URL)
 MEDIA_ROOT = path.join(APP_PATH, MEDIA_URL)
 
@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'misc',   # for testing
     'tags',
+    'gunicorn',
 )
 
 # A sample logging configuration. The only tangible logging
