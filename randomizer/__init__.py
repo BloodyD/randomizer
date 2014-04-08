@@ -5,6 +5,8 @@ NAMES = [
   'Max',
   'Stephan',
   'Willy',
+  'Robert',
+  'Jan'
 ]
 
 
