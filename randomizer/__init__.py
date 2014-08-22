@@ -6,6 +6,7 @@ NAMES = [
   'Stephan',
   'Willy',
   'Robert',
+  'Martin',
   'Jan'
 ]
 
